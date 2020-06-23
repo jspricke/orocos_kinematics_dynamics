@@ -1,6 +1,9 @@
 #include <math.h>
 #include "framestest.hpp"
 #include <frames_io.hpp>
+
+#include <iostream>
+
 CPPUNIT_TEST_SUITE_REGISTRATION( FramesTest );
 
 using namespace KDL;
@@ -33,7 +36,7 @@ void FramesTest::TestVector() {
 	TestVector2(v);
 	Vector   v2(0,0,0);
 	TestVector2(v2);
-	
+
 	Vector nu(0,0,0);
 	CPPUNIT_ASSERT_EQUAL(nu.Norm(),0.0);
 	Vector nu2(10,0,0);
@@ -43,7 +46,7 @@ void FramesTest::TestVector() {
 void FramesTest::TestVector2DNorm() {
     Vector2 nu(0, 0);
 	CPPUNIT_ASSERT_EQUAL(nu.Norm(), 0.0);
- 	
+
 	CPPUNIT_ASSERT_EQUAL(Vector2(1, 0).Norm(), 1.0);
 	CPPUNIT_ASSERT_EQUAL(Vector2(0, 1).Norm(), 1.0);
 	CPPUNIT_ASSERT_EQUAL(Vector2(-1, 0).Norm(), 1.0);
@@ -70,14 +73,14 @@ void FramesTest::TestTwist() {
 	Twist    t(Vector(6,3,5),Vector(4,-2,7));
 	TestTwist2(t);
 	Twist    t2(Vector(0,0,0),Vector(0,0,0));
-	TestTwist2(t2);	
+	TestTwist2(t2);
 	Twist    t3(Vector(0,-9,-3),Vector(1,-2,-4));
-	TestTwist2(t3);	
+	TestTwist2(t3);
 }
 
 void FramesTest::TestWrench2(Wrench& w) {
 	// Wrench
-	Wrench   w2;	
+	Wrench   w2;
 	CPPUNIT_ASSERT_EQUAL(2*w-w,w);
 	CPPUNIT_ASSERT_EQUAL(w*2-w,w);
 	CPPUNIT_ASSERT_EQUAL(w+w+w-2*w,w);
@@ -97,15 +100,15 @@ void FramesTest::TestWrench() {
 	Wrench   w2(Vector(0,0,0),Vector(0,0,0));
 	TestWrench2(w2);
 	Wrench   w3(Vector(2,1,4),Vector(5,3,1));
-	TestWrench2(w3);		
+	TestWrench2(w3);
 }
 
 void FramesTest::TestRotation2(const Vector& v,double a,double b,double c) {
-	Vector   v2; 
+	Vector   v2;
 	// Wrench
 	Wrench   w(Vector(7,-1,3),Vector(2,-3,3));
 	Twist    t(Vector(6,3,5),Vector(4,-2,7));
-	// Rotation		
+	// Rotation
 	Rotation R;
 	Rotation R2;
 	double ra;
@@ -314,7 +317,7 @@ void FramesTest::TestRangeArbitraryRotation(const std::string& msg,
 	TestArbitraryRotation(msg, v, 361,   1, expectedVector);
 	TestArbitraryRotation(msg, v, 450,  90, expectedVector);
 	TestArbitraryRotation(msg, v, 539, 179, expectedVector);
-//	TestArbitraryRotation(msg, v, 540, 180, expectedVector);	// see above 
+//	TestArbitraryRotation(msg, v, 540, 180, expectedVector);	// see above
 	TestArbitraryRotation(msg, v, 541, 179, -expectedVector);	// like 181
 	TestArbitraryRotation(msg, v, 630,  90, -expectedVector);	// like 270
 	TestArbitraryRotation(msg, v, 719,   1, -expectedVector);	// like 259
@@ -323,7 +326,7 @@ void FramesTest::TestRangeArbitraryRotation(const std::string& msg,
 	TestArbitraryRotation(msg, v, -45,   45, -expectedVector);
 	TestArbitraryRotation(msg, v, -90,   90, -expectedVector);
 	TestArbitraryRotation(msg, v, -179, 179, -expectedVector);
-//	TestArbitraryRotation(msg, v, -180, 180, expectedVector);	// see above 
+//	TestArbitraryRotation(msg, v, -180, 180, expectedVector);	// see above
 	TestArbitraryRotation(msg, v, -181, 179, expectedVector);
 	TestArbitraryRotation(msg, v, -270,  90, expectedVector);
 	TestArbitraryRotation(msg, v, -359,   1, expectedVector);
@@ -331,7 +334,7 @@ void FramesTest::TestRangeArbitraryRotation(const std::string& msg,
 	TestArbitraryRotation(msg, v, -361,   1, -expectedVector);
 	TestArbitraryRotation(msg, v, -450,  90, -expectedVector);
 	TestArbitraryRotation(msg, v, -539, 179, -expectedVector);
-//	TestArbitraryRotation(msg, v, -540, 180, -expectedVector);	// see above 
+//	TestArbitraryRotation(msg, v, -540, 180, -expectedVector);	// see above
 	TestArbitraryRotation(msg, v, -541, 179, expectedVector);
 	TestArbitraryRotation(msg, v, -630,  90, expectedVector);
 	TestArbitraryRotation(msg, v, -719,   1, expectedVector);
@@ -483,7 +486,7 @@ void FramesTest::TestQuaternion() {
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(z, 0, epsilon);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(w, cos((45*deg2rad)/2), epsilon);
     R2 = Rotation::Quaternion(x,y,z,w);
-	CPPUNIT_ASSERT_EQUAL(R,R2);    
+	CPPUNIT_ASSERT_EQUAL(R,R2);
 
     // direct 45 deg rotation in X
     R2 = Rotation::Quaternion(sin((45*deg2rad)/2), 0, 0, cos((45*deg2rad)/2));
@@ -493,12 +496,12 @@ void FramesTest::TestQuaternion() {
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(y, y2, epsilon);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(z, z2, epsilon);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(w, w2, epsilon);
-    
+
     // 45 deg rotation in X and in Z
     R = Rotation::EulerZYX(45*deg2rad,0,45*deg2rad);
     R.GetQuaternion(x,y,z,w);
     R2 = Rotation::Quaternion(x,y,z,w);
-	CPPUNIT_ASSERT_EQUAL(R,R2);    
+	CPPUNIT_ASSERT_EQUAL(R,R2);
     R2.GetQuaternion(x2,y2,z2,w2);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(x, x2, epsilon);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(y, y2, epsilon);
@@ -647,13 +650,16 @@ void FramesTest::TestJntArray()
 {
     JntArray random = CreateRandomJntArray(4);
     JntArray random_copy(random);
+    std::cout << "TestJntArray assert1" << std::endl;
     CPPUNIT_ASSERT(Equal(random_copy,random));
 
     JntArray zero_set_to_zero(4);
     SetToZero(zero_set_to_zero);
+    std::cout << "TestJntArray assert2" << std::endl;
     CPPUNIT_ASSERT(!Equal(random,zero_set_to_zero));
 
     JntArray zero(4);
+    std::cout << "TestJntArray assert3" << std::endl;
     CPPUNIT_ASSERT(Equal(zero_set_to_zero,zero));
 
     JntArray almost_zero = CreateRandomJntArray(4);
@@ -663,13 +669,17 @@ void FramesTest::TestJntArray()
     almost_zero(3) = almost_zero(3)*1e-7;
 
     // This should obviously be equal, but fails in old buggy implementation
+    std::cout << "TestJntArray assert4" << std::endl;
     CPPUNIT_ASSERT(Equal(almost_zero,zero,1));
+    std::cout << "TestJntArray assert5" << std::endl;
     CPPUNIT_ASSERT(Equal(almost_zero,zero,1e-6));
+    std::cout << "TestJntArray assert6" << std::endl;
     CPPUNIT_ASSERT(!Equal(almost_zero,zero,1e-8));
 
     JntArray sum_random_zero(4);
 
     Add(random,zero_set_to_zero,sum_random_zero);
+    std::cout << "TestJntArray assert7" << std::endl;
     CPPUNIT_ASSERT(Equal(random,sum_random_zero));
 
     JntArray add_subtract(4);
@@ -677,12 +687,14 @@ void FramesTest::TestJntArray()
 
     Add(random,random2,add_subtract);
     Subtract(add_subtract,random2,add_subtract);
+    std::cout << "TestJntArray assert8" << std::endl;
     CPPUNIT_ASSERT(Equal(random,add_subtract));
 
     JntArray random_multiply_by_2(4);
     JntArray sum_random_same_random(4);
     Multiply(random,2,random_multiply_by_2);
     Add(random,random,sum_random_same_random);
+    std::cout << "TestJntArray assert9" << std::endl;
     CPPUNIT_ASSERT(Equal(sum_random_same_random,random_multiply_by_2));
 
     double a;
@@ -691,58 +703,59 @@ void FramesTest::TestJntArray()
     JntArray random_multiply_devide(4);
     Multiply(random,a,random_multiply_devide);
     Divide(random_multiply_devide,a,random_multiply_devide);
+    std::cout << "TestJntArray assert10" << std::endl;
     CPPUNIT_ASSERT(Equal(random_multiply_devide,random));
 }
 
- 
+
 void FramesTest::TestJntArrayWhenEmpty()
 {
     JntArray a1;
     JntArray a2;
     JntArray a3(a2);
-    
+
  	// won't assert()
     CPPUNIT_ASSERT_EQUAL((unsigned int)0,a1.rows());
     CPPUNIT_ASSERT(Equal(a2,a1));
-    
+
  	a2 = a1;
     CPPUNIT_ASSERT(Equal(a2,a1));
-    
+
  	SetToZero(a2);
     CPPUNIT_ASSERT(Equal(a2,a1));
-    
+
     Add(a1,a2,a3);
     CPPUNIT_ASSERT(Equal(a1,a3));
-    
+
     Subtract(a1,a2,a3);
     CPPUNIT_ASSERT(Equal(a1,a3));
- 	
+
     Multiply(a1,3.1,a3);
     CPPUNIT_ASSERT(Equal(a1,a3));
- 	
+
     Divide(a1,3.1,a3);
     CPPUNIT_ASSERT(Equal(a1,a3));
- 	
+
  	// MultiplyJacobian() - not tested here
-    
-    
+
+
  	/* will assert() - not tested here
        double j1 = a1(0);
- 	*/	
-    
+ 	*/
+
  	// and now resize, and do just a few tests
     a1.resize(3);
     a2.resize(3);
     CPPUNIT_ASSERT_EQUAL((unsigned int)3,a1.rows());
     CPPUNIT_ASSERT(Equal(a2,a1));
-    
+
     random(a1(0));
     random(a1(1));
     random(a1(2));
     a1 = a2;
     CPPUNIT_ASSERT(Equal(a1,a2));
     CPPUNIT_ASSERT_EQUAL(a1(1),a2(1));
-    
+
     a3.resize(3);
     Subtract(a1,a2,a3);	// a3 = a2 - a1 = {0}
     SetToZero(a1);
